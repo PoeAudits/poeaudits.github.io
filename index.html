@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Browse Fanime trip photos and videos."
+    />
+    <title>Fanime Photo Drop</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-theme="manga-chapter">
+    <header class="site-nav">
+      <a class="brand" href="/">Fanime Photo Drop</a>
+      <nav aria-label="Main navigation">
+        <a href="/gallery.html">Gallery</a>
+        <a href="/upload.html">Upload</a>
+      </nav>
+      <label class="theme-picker">
+        <span>Style</span>
+        <select id="theme-select" aria-label="Choose site style">
+          <option value="neon">Neon Panels</option>
+          <option value="paper">Paper Pages</option>
+          <option value="midnight">Midnight Matsuri</option>
+          <option value="clean">Clean Gallery</option>
+          <option value="scrapbook">Sticker Scrapbook</option>
+          <option value="manga">Manga Panels</option>
+          <option value="manga-ink">Ink Splash Manga</option>
+          <option value="manga-zine">Newsprint Panels</option>
+          <option value="manga-chapter">Chapter Scroll</option>
+          <option value="arcade">Arcade Afterparty</option>
+        </select>
+      </label>
+    </header>
+
+    <main class="shell home-shell">
+      <div class="home-layout">
+        <section class="hero" aria-labelledby="page-title">
+          <p class="eyebrow">San Jose weekend archive</p>
+          <h1 id="page-title">Fanime memories in motion.</h1>
+          <p class="intro">
+            A playful manga-panel archive for photos and videos from the weekend.
+            This gallery is still being shaped, styled, and rearranged.
+          </p>
+          <div class="hero-actions">
+            <a class="button-link" href="/gallery.html">View gallery</a>
+            <a class="ghost-link" href="/day.html?day=day-2">Browse by day</a>
+            <a class="ghost-link" href="/upload.html">Add photos</a>
+          </div>
+        </section>
+
+        <section class="home-collage" data-home-collage aria-label="Recent uploaded photos">
+          <p class="collage-empty">Loading the photo collage...</p>
+        </section>
+      </div>
+
+    </main>
+
+    <footer class="site-footer">
+      <p>Fanime weekend photo drop.</p>
+    </footer>
+
+    <script src="/theme.js"></script>
+    <script src="/media-loading.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

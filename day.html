@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Browse Fanime trip media by day." />
+    <title>Fanime Day Gallery</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-theme="manga-chapter">
+    <header class="site-nav">
+      <a class="brand" href="/">Fanime Photo Drop</a>
+      <nav aria-label="Main navigation">
+        <a href="/gallery.html">Gallery</a>
+        <a href="/upload.html">Upload</a>
+      </nav>
+      <label class="theme-picker">
+        <span>Style</span>
+        <select id="theme-select" aria-label="Choose site style">
+          <option value="neon">Neon Panels</option>
+          <option value="paper">Paper Pages</option>
+          <option value="midnight">Midnight Matsuri</option>
+          <option value="clean">Clean Gallery</option>
+          <option value="scrapbook">Sticker Scrapbook</option>
+          <option value="manga">Manga Panels</option>
+          <option value="manga-ink">Ink Splash Manga</option>
+          <option value="manga-zine">Newsprint Panels</option>
+          <option value="manga-chapter">Chapter Scroll</option>
+          <option value="arcade">Arcade Afterparty</option>
+        </select>
+      </label>
+    </header>
+
+    <main class="shell wide">
+      <section class="hero gallery-hero" aria-labelledby="page-title">
+        <p class="eyebrow">Day pages</p>
+        <h1 id="page-title" data-gallery-title>Day Gallery</h1>
+        <p class="intro" data-gallery-summary>
+          A day-by-day path through the weekend.
+        </p>
+      </section>
+
+      <section class="day-strip" aria-label="Browse by day">
+        <a href="/gallery.html" data-day-link="">All</a>
+        <a href="/day.html?day=day-0" data-day-link="day-0">Day 0</a>
+        <a href="/day.html?day=day-1" data-day-link="day-1">Day 1</a>
+        <a href="/day.html?day=day-2" data-day-link="day-2">Day 2</a>
+        <a href="/day.html?day=day-3" data-day-link="day-3">Day 3</a>
+        <a href="/day.html?day=day-4" data-day-link="day-4">Day 4</a>
+        <a href="/day.html?day=unlabeled" data-day-link="unlabeled">Unlabeled</a>
+      </section>
+
+      <section class="gallery-grid" data-gallery aria-live="polite"></section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Fanime weekend photo drop.</p>
+    </footer>
+
+    <script src="/theme.js"></script>
+    <script src="/media-loading.js"></script>
+    <script src="/gallery.js"></script>
+  </body>
+</html>

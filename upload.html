@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Upload Fanime trip photos and videos for Day 0 through Day 4."
+    />
+    <title>Fanime Photo Upload</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-theme="manga-chapter" class="upload-only-page">
+    <header class="site-nav intake-nav">
+      <span class="brand">Fanime Photo Drop</span>
+    </header>
+
+    <main class="shell compact intake-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Fanime trip intake</p>
+        <h1 id="page-title">Upload your photos and videos.</h1>
+        <p class="intro">
+          Add anything from the weekend here. Day, name, and notes are optional,
+          and uploads go straight to Cloudinary.
+        </p>
+      </section>
+
+      <section class="card upload-card" aria-label="Media upload form">
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          id="upload-form"
+        >
+          <label class="field">
+            <span>Photos or videos</span>
+            <input
+              id="photos"
+              name="photos"
+              type="file"
+              accept="image/*,video/*"
+              multiple
+              required
+            />
+            <small id="file-help">Pick one or more files. Photos and videos upload directly to Cloudinary.</small>
+          </label>
+
+          <label class="field">
+            <span>Day <em>optional</em></span>
+            <select name="day">
+              <option value="">Unlabeled / not sure</option>
+              <option value="day-0">Day 0</option>
+              <option value="day-1">Day 1</option>
+              <option value="day-2">Day 2</option>
+              <option value="day-3">Day 3</option>
+              <option value="day-4">Day 4</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Your name <em>optional</em></span>
+            <input name="uploader" type="text" autocomplete="name" />
+          </label>
+
+          <label class="field">
+            <span>Notes or caption <em>optional</em></span>
+            <textarea
+              name="notes"
+              rows="4"
+              placeholder="Anything useful: event, location, people, context..."
+            ></textarea>
+          </label>
+
+          <p class="form-note">
+            Share only media you own or have permission to share. Uploads may be
+            included in the trip gallery later.
+          </p>
+
+          <div class="actions">
+            <button type="submit">Upload files</button>
+            <p id="status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Upload-only intake page.</p>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -11,9 +11,13 @@ const resources = [
 ];
 
 const items = resources
+  .filter(isFanimeAsset)
   .filter((resource) => resource.secure_url)
   .map(toMediaItem)
-  .sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
+  .sort((a, b) => {
+    const dateOrder = b.submittedAt.localeCompare(a.submittedAt);
+    return dateOrder || b.id.localeCompare(a.id);
+  });
 
 await writeFile('data/media.json', `${JSON.stringify({ items }, null, 2)}\n`);
 console.log(`Synced ${items.length} Cloudinary assets.`);
@@ -66,6 +70,11 @@ function toMediaItem(resource) {
     kind: resource.resource_type === 'video' ? 'video' : 'image',
     url: resource.secure_url,
   };
+}
+
+function isFanimeAsset(resource) {
+  const tags = Array.isArray(resource.tags) ? resource.tags : [];
+  return tags.includes('fanime-2026') && !tags.includes('agent-test');
 }
 
 function inferContentType(resource) {

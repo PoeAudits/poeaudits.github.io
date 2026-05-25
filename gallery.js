@@ -70,7 +70,30 @@ function renderItems(items) {
     return;
   }
 
-  gallery.innerHTML = items.map(renderCard).join('');
+  const photos = items.filter((item) => item.kind !== 'video');
+  const videos = items.filter((item) => item.kind === 'video');
+
+  gallery.innerHTML = [
+    renderMediaSection('Photos', photos),
+    renderMediaSection('Videos', videos),
+  ].join('');
+}
+
+function renderMediaSection(label, items) {
+  if (items.length === 0) {
+    return '';
+  }
+
+  return `
+    <section class="media-section" aria-labelledby="${label.toLowerCase()}-heading">
+      <div class="media-section-heading">
+        <h2 id="${label.toLowerCase()}-heading">${label}</h2>
+        <p>${items.length} ${items.length === 1 ? 'file' : 'files'}</p>
+      </div>
+      <div class="gallery-grid media-section-grid">
+        ${items.map(renderCard).join('')}
+      </div>
+    </section>`;
 }
 
 function renderCard(item, index) {

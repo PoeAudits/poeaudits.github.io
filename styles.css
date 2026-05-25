@@ -554,18 +554,6 @@ textarea {
   gap: 24px;
 }
 
-.upload-results {
-  margin-top: 24px;
-}
-
-.upload-results ul {
-  display: grid;
-  gap: 10px;
-  margin: 18px 0;
-  padding-left: 20px;
-  overflow-wrap: anywhere;
-}
-
 .day-strip {
   display: flex;
   flex-wrap: wrap;

@@ -10,7 +10,6 @@ const uploadConcurrency = 3;
 const collageSize = 8;
 const mediaLoader = window.FanimeMedia;
 const galleryDataUrl = '/data/media.json';
-const lastUploadStorageKey = 'fanime-last-media-uploads';
 
 loadHomeCollage();
 
@@ -41,7 +40,6 @@ form?.addEventListener('submit', async (event) => {
   try {
     const assets = await uploadMedia(files);
     console.info('Uploaded media', assets);
-    rememberUpload(assets);
 
     window.location.href = '/thanks.html';
   } catch (error) {
@@ -68,18 +66,6 @@ async function uploadMedia(files) {
 
   await Promise.all(workers);
   return assets;
-}
-
-function rememberUpload(assets) {
-  const record = {
-    submittedAt: new Date().toISOString(),
-    day: 'unlabeled',
-    uploader: form.elements.uploader.value,
-    notes: form.elements.notes.value,
-    assets,
-  };
-
-  window.localStorage.setItem(lastUploadStorageKey, JSON.stringify(record));
 }
 
 async function uploadMediaFile(file) {

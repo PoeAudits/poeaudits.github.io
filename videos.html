@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="View one Fanime media upload bundle." />
-    <title>Photo Bundle</title>
+    <meta name="description" content="Watch Fanime trip videos." />
+    <title>Fanime Videos</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body data-theme="manga-chapter">
@@ -12,7 +12,7 @@
       <a class="brand" href="/">Fanime Photo Drop</a>
       <nav aria-label="Main navigation">
         <a href="/gallery.html">Gallery</a>
-        <a href="/videos.html">Videos</a>
+        <a href="/videos.html" aria-current="page">Videos</a>
         <a href="/upload.html">Upload</a>
       </nav>
       <label class="theme-picker">
@@ -32,14 +32,29 @@
       </label>
     </header>
 
-    <main class="shell wide" data-submission aria-live="polite"></main>
+    <main class="shell wide">
+      <section class="hero gallery-hero" aria-labelledby="page-title">
+        <p class="eyebrow">Weekend videos</p>
+        <h1 id="page-title" data-gallery-title>Fanime Videos</h1>
+        <p class="intro" data-gallery-summary>
+          Videos from the San Jose weekend.
+        </p>
+      </section>
+
+      <section class="day-strip" aria-label="Browse photos and videos">
+        <a href="/gallery.html">Photos</a>
+        <a href="/videos.html" aria-current="page">Videos</a>
+      </section>
+
+      <section class="gallery-grid" data-gallery data-gallery-kind="video" aria-live="polite"></section>
+    </main>
 
     <footer class="site-footer">
-      <p><a href="/gallery.html">Back to the gallery</a></p>
+      <p>Fanime weekend photo drop.</p>
     </footer>
 
     <script src="/theme.js"></script>
     <script src="/media-loading.js"></script>
-    <script src="/submission.js"></script>
+    <script src="/gallery.js"></script>
   </body>
 </html>

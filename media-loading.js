@@ -29,9 +29,9 @@ function applyImageAttrs(image, item, index, options) {
   const eagerCount = options.eagerCount ?? 2;
   const highPriorityCount = options.highPriorityCount ?? 1;
 
-  image.src = imageUrl(item.url, options.defaultWidth ?? 640, options);
-  image.srcset = srcset(item.url, options.widths, options);
-  image.sizes = options.sizes || '(max-width: 620px) 92vw, 33vw';
+  image.src = item.url;
+  image.srcset = item.srcset || '';
+  image.sizes = item.sizes || options.sizes || '(max-width: 620px) 92vw, 33vw';
   image.alt = item.name || 'Fanime memory';
   image.loading = index < eagerCount ? 'eager' : 'lazy';
   image.decoding = 'async';
@@ -71,7 +71,7 @@ function warmImages(items, options = {}) {
   const urls = items
     .filter((item) => item.kind === 'image' && item.url)
     .slice(start, start + limit)
-    .map((item) => imageUrl(item.url, width));
+    .map((item) => item.url);
 
   if (urls.length === 0) {
     return;
@@ -86,27 +86,7 @@ function srcset(url, widths = defaultWidths, options = {}) {
 }
 
 function imageUrl(url, width, options = {}) {
-  if (isCloudinaryImage(url)) {
-    return url.replace('/image/upload/', `/image/upload/f_auto,${quality(options)},c_limit,w_${width}/`);
-  }
-
   return url;
-}
-
-function quality(options) {
-  if (typeof options.quality === 'number') {
-    return `q_${options.quality}`;
-  }
-
-  if (typeof options.quality === 'string') {
-    return `q_${options.quality}`;
-  }
-
-  return 'q_auto:eco';
-}
-
-function isCloudinaryImage(url) {
-  return /^https:\/\/res\.cloudinary\.com\/dnpeyfhn2\/image\/upload\//.test(url);
 }
 
 function addPreloadHint(url) {

@@ -57,6 +57,9 @@ function toMediaItem(resource) {
   const name = context.original_filename || resource.filename || resource.public_id.split('/').pop();
   const submissionId = resource.asset_id || resource.public_id;
   const contentType = inferContentType(resource);
+  const kind = resource.resource_type === 'video' ? 'video' : 'image';
+  const originalUrl = resource.secure_url;
+  const delivery = kind === 'image' ? imageDeliveryUrls(originalUrl) : { url: originalUrl };
 
   return {
     id: resource.asset_id || resource.public_id,
@@ -67,9 +70,25 @@ function toMediaItem(resource) {
     name,
     size: Number.isFinite(resource.bytes) ? resource.bytes : 0,
     contentType,
-    kind: resource.resource_type === 'video' ? 'video' : 'image',
-    url: resource.secure_url,
+    kind,
+    originalUrl,
+    ...delivery,
   };
+}
+
+function imageDeliveryUrls(url) {
+  const widths = [240, 360, 540, 720];
+  const transform = (width) => transformImageUrl(url, width);
+
+  return {
+    url: transform(540),
+    srcset: widths.map((width) => `${transform(width)} ${width}w`).join(', '),
+    sizes: '(max-width: 620px) 92vw, (max-width: 1180px) 45vw, 360px',
+  };
+}
+
+function transformImageUrl(url, width) {
+  return url.replace('/image/upload/', `/image/upload/f_auto,q_auto:eco,c_limit,w_${width}/`);
 }
 
 function isFanimeAsset(resource) {

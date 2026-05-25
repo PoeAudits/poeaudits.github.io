@@ -1181,6 +1181,11 @@ body[data-theme="manga-chapter"] .gallery-grid {
   width: 100%;
 }
 
+.load-more {
+  justify-self: center;
+  min-width: min(100%, 260px);
+}
+
 .detail-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }

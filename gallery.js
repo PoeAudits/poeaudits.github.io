@@ -4,6 +4,11 @@ const summary = document.querySelector('[data-gallery-summary]');
 const dayLinks = document.querySelectorAll('[data-day-link]');
 const mediaLoader = window.FanimeMedia;
 const galleryDataUrl = '/data/media.json';
+const galleryKind = gallery?.dataset.galleryKind || 'all';
+const initialPhotoCount = 12;
+const photoBatchSize = 12;
+let visiblePhotoCount = initialPhotoCount;
+let currentItems = [];
 
 const dayLabels = {
   'day-0': 'Day 0',
@@ -33,8 +38,11 @@ async function loadGallery() {
     }
 
     const data = await response.json();
-    const items = normalizeItems(data).filter((item) => !day || item.day === day);
+    const items = normalizeItems(data)
+      .filter((item) => !day || item.day === day)
+      .filter(matchesGalleryKind);
 
+    currentItems = items;
     renderHeading(items.length);
     renderItems(items);
     mediaLoader?.prepareImages(gallery);
@@ -53,13 +61,14 @@ function normalizeItems(data) {
 
 function renderHeading(count) {
   const label = dayLabels[day] || 'All Days';
+  const noun = galleryKind === 'video' ? 'video' : 'memory';
 
   if (title) {
-    title.textContent = day ? `${label} Gallery` : 'Fanime Gallery';
+    title.textContent = galleryKind === 'video' ? 'Fanime Videos' : day ? `${label} Gallery` : 'Fanime Gallery';
   }
 
   if (summary) {
-    summary.textContent = `${count} ${count === 1 ? 'memory' : 'memories'} in the weekend archive.`;
+    summary.textContent = `${count} ${count === 1 ? noun : `${noun}s`} in the weekend archive.`;
   }
 }
 
@@ -70,16 +79,18 @@ function renderItems(items) {
     return;
   }
 
-  const photos = items.filter((item) => item.kind !== 'video');
-  const videos = items.filter((item) => item.kind === 'video');
+  const label = galleryKind === 'video' ? 'Videos' : 'Photos';
+  const visibleItems = galleryKind === 'image' ? items.slice(0, visiblePhotoCount) : items;
 
-  gallery.innerHTML = [
-    renderMediaSection('Photos', photos),
-    renderMediaSection('Videos', videos),
-  ].join('');
+  gallery.innerHTML = `${renderMediaSection(label, visibleItems, items.length)}${renderLoadMore(items.length)}`;
+  gallery.querySelector('[data-load-more]')?.addEventListener('click', () => {
+    visiblePhotoCount += photoBatchSize;
+    renderItems(currentItems);
+    mediaLoader?.prepareImages(gallery);
+  });
 }
 
-function renderMediaSection(label, items) {
+function renderMediaSection(label, items, totalCount) {
   if (items.length === 0) {
     return '';
   }
@@ -88,7 +99,7 @@ function renderMediaSection(label, items) {
     <section class="media-section" aria-labelledby="${label.toLowerCase()}-heading">
       <div class="media-section-heading">
         <h2 id="${label.toLowerCase()}-heading">${label}</h2>
-        <p>${items.length} ${items.length === 1 ? 'file' : 'files'}</p>
+        <p>${totalCount} ${totalCount === 1 ? 'file' : 'files'}</p>
       </div>
       <div class="gallery-grid media-section-grid">
         ${items.map(renderCard).join('')}
@@ -96,17 +107,25 @@ function renderMediaSection(label, items) {
     </section>`;
 }
 
+function renderLoadMore(totalCount) {
+  if (galleryKind !== 'image' || visiblePhotoCount >= totalCount) {
+    return '';
+  }
+
+  const remaining = totalCount - visiblePhotoCount;
+  return `<button class="load-more" type="button" data-load-more>Load ${Math.min(photoBatchSize, remaining)} more photos</button>`;
+}
+
 function renderCard(item, index) {
   const imageOptions = {
-    eagerCount: 3,
+    eagerCount: 1,
     highPriorityCount: 1,
-    sizes: '(max-width: 620px) 92vw, (max-width: 1180px) 45vw, 360px',
-    quality: 'auto:eco',
+    sizes: item.sizes || '(max-width: 620px) 92vw, (max-width: 1180px) 45vw, 360px',
   };
   const media =
     item.kind === 'video'
       ? `<video controls preload="metadata" src="${escapeAttribute(item.url)}"></video>`
-      : `<img ${imageAttrs(index, imageOptions)} src="${escapeAttribute(imageUrl(item.url, 640, imageOptions))}" srcset="${escapeAttribute(imageSrcset(item.url, imageOptions))}" alt="${escapeAttribute(item.name)}" />`;
+      : `<img ${imageAttrs(index, imageOptions)} src="${escapeAttribute(item.url)}" srcset="${escapeAttribute(item.srcset || '')}" alt="${escapeAttribute(item.name)}" />`;
 
   return `
     <article class="media-card ${item.kind === 'video' ? 'video-card' : ''}">
@@ -135,7 +154,7 @@ function imageSrcset(url, options) {
     return mediaLoader.srcset(url, [240, 360, 540, 720], options);
   }
 
-  return [240, 360, 540, 720].map((width) => `${imageUrl(url, width, options)} ${width}w`).join(', ');
+  return '';
 }
 
 function imageUrl(url, width, options) {
@@ -143,15 +162,7 @@ function imageUrl(url, width, options) {
     return mediaLoader.imageUrl(url, width, options);
   }
 
-  if (isCloudinaryImage(url)) {
-    return url.replace('/image/upload/', `/image/upload/f_auto,q_auto:eco,c_limit,w_${width}/`);
-  }
-
   return url;
-}
-
-function isCloudinaryImage(url) {
-  return /^https:\/\/res\.cloudinary\.com\/dnpeyfhn2\/image\/upload\//.test(url);
 }
 
 function setActiveDay() {
@@ -159,6 +170,18 @@ function setActiveDay() {
     const linkDay = link.getAttribute('data-day-link') || '';
     link.toggleAttribute('aria-current', linkDay === day || (!linkDay && !day));
   });
+}
+
+function matchesGalleryKind(item) {
+  if (galleryKind === 'image') {
+    return item.kind !== 'video';
+  }
+
+  if (galleryKind === 'video') {
+    return item.kind === 'video';
+  }
+
+  return true;
 }
 
 function formatDate(value) {

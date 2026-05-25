@@ -79,13 +79,12 @@ function renderMedia(item, index) {
   const imageOptions = {
     eagerCount: 2,
     highPriorityCount: 1,
-    sizes: '(max-width: 620px) 92vw, (max-width: 1180px) 70vw, 760px',
-    quality: 'auto:good',
+    sizes: item.sizes || '(max-width: 620px) 92vw, (max-width: 1180px) 70vw, 760px',
   };
   const media =
     item.kind === 'video'
       ? `<video controls preload="metadata" src="${escapeAttribute(item.url)}"></video>`
-      : `<img ${imageAttrs(index, imageOptions)} src="${escapeAttribute(imageUrl(item.url, 960, imageOptions))}" srcset="${escapeAttribute(imageSrcset(item.url, imageOptions))}" alt="${escapeAttribute(item.name)}" />`;
+      : `<img ${imageAttrs(index, imageOptions)} src="${escapeAttribute(item.url)}" srcset="${escapeAttribute(item.srcset || '')}" alt="${escapeAttribute(item.name)}" />`;
 
   return `
     <article class="media-card ${item.kind === 'video' ? 'video-card' : ''}">
@@ -110,7 +109,7 @@ function imageSrcset(url, options) {
     return mediaLoader.srcset(url, [480, 760, 1100, 1500], options);
   }
 
-  return [480, 760, 1100, 1500].map((width) => `${imageUrl(url, width, options)} ${width}w`).join(', ');
+  return '';
 }
 
 function imageUrl(url, width, options) {
@@ -118,15 +117,7 @@ function imageUrl(url, width, options) {
     return mediaLoader.imageUrl(url, width, options);
   }
 
-  if (isCloudinaryImage(url)) {
-    return url.replace('/image/upload/', `/image/upload/f_auto,q_auto:good,c_limit,w_${width}/`);
-  }
-
   return url;
-}
-
-function isCloudinaryImage(url) {
-  return /^https:\/\/res\.cloudinary\.com\/dnpeyfhn2\/image\/upload\//.test(url);
 }
 
 function formatDate(value) {

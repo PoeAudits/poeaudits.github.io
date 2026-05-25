@@ -61,14 +61,14 @@ function normalizeItems(data) {
 
 function renderHeading(count) {
   const label = dayLabels[day] || 'All Days';
-  const noun = galleryKind === 'video' ? 'video' : 'memory';
+  const noun = galleryKind === 'video' ? ['video', 'videos'] : ['memory', 'memories'];
 
   if (title) {
     title.textContent = galleryKind === 'video' ? 'Fanime Videos' : day ? `${label} Gallery` : 'Fanime Gallery';
   }
 
   if (summary) {
-    summary.textContent = `${count} ${count === 1 ? noun : `${noun}s`} in the weekend archive.`;
+    summary.textContent = `${count} ${count === 1 ? noun[0] : noun[1]} in the weekend archive.`;
   }
 }
 

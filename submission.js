@@ -80,7 +80,7 @@ function renderMedia(item, index) {
     eagerCount: 2,
     highPriorityCount: 1,
     sizes: '(max-width: 620px) 92vw, (max-width: 1180px) 70vw, 760px',
-    quality: 78,
+    quality: 'auto:good',
   };
   const media =
     item.kind === 'video'
@@ -119,7 +119,7 @@ function imageUrl(url, width, options) {
   }
 
   if (isCloudinaryImage(url)) {
-    return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width}/`);
+    return url.replace('/image/upload/', `/image/upload/f_auto,q_auto:good,c_limit,w_${width}/`);
   }
 
   return url;

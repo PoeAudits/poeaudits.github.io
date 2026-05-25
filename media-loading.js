@@ -7,7 +7,7 @@ window.FanimeMedia = {
   warmImages,
 };
 
-const defaultWidths = [360, 640, 960, 1280];
+const defaultWidths = [240, 360, 540, 720];
 
 function createImage(item, index, options = {}) {
   const image = document.createElement('img');
@@ -87,10 +87,22 @@ function srcset(url, widths = defaultWidths, options = {}) {
 
 function imageUrl(url, width, options = {}) {
   if (isCloudinaryImage(url)) {
-    return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width}/`);
+    return url.replace('/image/upload/', `/image/upload/f_auto,${quality(options)},c_limit,w_${width}/`);
   }
 
   return url;
+}
+
+function quality(options) {
+  if (typeof options.quality === 'number') {
+    return `q_${options.quality}`;
+  }
+
+  if (typeof options.quality === 'string') {
+    return `q_${options.quality}`;
+  }
+
+  return 'q_auto:eco';
 }
 
 function isCloudinaryImage(url) {

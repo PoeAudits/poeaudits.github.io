@@ -101,7 +101,7 @@ function renderCard(item, index) {
     eagerCount: 3,
     highPriorityCount: 1,
     sizes: '(max-width: 620px) 92vw, (max-width: 1180px) 45vw, 360px',
-    quality: 76,
+    quality: 'auto:eco',
   };
   const media =
     item.kind === 'video'
@@ -132,10 +132,10 @@ function imageAttrs(index, options) {
 
 function imageSrcset(url, options) {
   if (mediaLoader) {
-    return mediaLoader.srcset(url, [360, 640, 960, 1280], options);
+    return mediaLoader.srcset(url, [240, 360, 540, 720], options);
   }
 
-  return [360, 640, 960, 1280].map((width) => `${imageUrl(url, width, options)} ${width}w`).join(', ');
+  return [240, 360, 540, 720].map((width) => `${imageUrl(url, width, options)} ${width}w`).join(', ');
 }
 
 function imageUrl(url, width, options) {
@@ -144,7 +144,7 @@ function imageUrl(url, width, options) {
   }
 
   if (isCloudinaryImage(url)) {
-    return url.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width}/`);
+    return url.replace('/image/upload/', `/image/upload/f_auto,q_auto:eco,c_limit,w_${width}/`);
   }
 
   return url;

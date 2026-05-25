@@ -269,8 +269,9 @@ function createCollageImage(photo, index) {
       eagerCount: 4,
       highPriorityCount: 1,
       sizes: '(max-width: 620px) 46vw, (max-width: 1180px) 24vw, 280px',
-      defaultWidth: 480,
-      widths: [240, 360, 480, 720],
+      defaultWidth: 360,
+      widths: [180, 240, 360, 540],
+      quality: 'auto:eco',
     });
   }
 

@@ -23,10 +23,24 @@
           <a class="button-link" href="/upload.html">Upload more</a>
         </div>
       </section>
+
+      <section class="card upload-results" id="upload-results" hidden>
+        <p class="eyebrow">Cloudinary proof</p>
+        <h2>Uploaded files from this browser</h2>
+        <p>
+          These links came back from Cloudinary after the last upload on this device.
+          Keep this page or copy the details if you need proof before the gallery is synced.
+        </p>
+        <ul id="uploaded-links"></ul>
+        <button type="button" id="copy-upload-json">Copy upload JSON</button>
+        <p id="copy-status" role="status" aria-live="polite"></p>
+      </section>
     </main>
 
     <footer class="site-footer">
       <p>Fanime weekend photo drop.</p>
     </footer>
+
+    <script src="/upload-results.js"></script>
   </body>
 </html>

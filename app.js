@@ -10,6 +10,7 @@ const uploadConcurrency = 3;
 const collageSize = 8;
 const mediaLoader = window.FanimeMedia;
 const galleryDataUrl = '/data/media.json';
+const lastUploadStorageKey = 'fanime-last-cloudinary-uploads';
 
 loadHomeCollage();
 
@@ -40,6 +41,7 @@ form?.addEventListener('submit', async (event) => {
   try {
     const assets = await uploadToCloudinary(files);
     console.info('Uploaded to Cloudinary', assets);
+    rememberUpload(assets);
 
     window.location.href = '/thanks.html';
   } catch (error) {
@@ -66,6 +68,18 @@ async function uploadToCloudinary(files) {
 
   await Promise.all(workers);
   return assets;
+}
+
+function rememberUpload(assets) {
+  const record = {
+    submittedAt: new Date().toISOString(),
+    day: form.elements.day.value || 'unlabeled',
+    uploader: form.elements.uploader.value,
+    notes: form.elements.notes.value,
+    assets,
+  };
+
+  window.localStorage.setItem(lastUploadStorageKey, JSON.stringify(record));
 }
 
 async function uploadCloudinaryFile(file) {

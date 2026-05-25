@@ -1,4 +1,4 @@
-const lastUploadStorageKey = 'fanime-last-cloudinary-uploads';
+const lastUploadStorageKey = 'fanime-last-media-uploads';
 const root = document.querySelector('#upload-results');
 const list = document.querySelector('#uploaded-links');
 const copyButton = document.querySelector('#copy-upload-json');

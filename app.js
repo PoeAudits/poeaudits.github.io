@@ -3,14 +3,14 @@ const status = document.querySelector('#status');
 const form = document.querySelector('#upload-form');
 const collage = document.querySelector('[data-home-collage]');
 const submitButton = form?.querySelector('button[type="submit"]');
-const cloudinaryCloudName = 'dnpeyfhn2';
-const cloudinaryUploadPreset = 'Fanime';
+const mediaCloudName = 'dnpeyfhn2';
+const mediaUploadPreset = 'Fanime';
 const maxFiles = 100;
 const uploadConcurrency = 3;
 const collageSize = 8;
 const mediaLoader = window.FanimeMedia;
 const galleryDataUrl = '/data/media.json';
-const lastUploadStorageKey = 'fanime-last-cloudinary-uploads';
+const lastUploadStorageKey = 'fanime-last-media-uploads';
 
 loadHomeCollage();
 
@@ -24,7 +24,7 @@ input?.addEventListener('change', () => {
   }
 
   status.textContent =
-    count === 0 ? '' : `${count} file${count === 1 ? '' : 's'} selected. Photos and videos upload directly to Cloudinary.`;
+    count === 0 ? '' : `${count} file${count === 1 ? '' : 's'} selected. Photos and videos upload directly.`;
 });
 
 form?.addEventListener('submit', async (event) => {
@@ -39,8 +39,8 @@ form?.addEventListener('submit', async (event) => {
   setUploading(true);
 
   try {
-    const assets = await uploadToCloudinary(files);
-    console.info('Uploaded to Cloudinary', assets);
+    const assets = await uploadMedia(files);
+    console.info('Uploaded media', assets);
     rememberUpload(assets);
 
     window.location.href = '/thanks.html';
@@ -50,7 +50,7 @@ form?.addEventListener('submit', async (event) => {
   }
 });
 
-async function uploadToCloudinary(files) {
+async function uploadMedia(files) {
   let nextFile = 0;
   let completedFiles = 0;
   const assets = new Array(files.length);
@@ -60,7 +60,7 @@ async function uploadToCloudinary(files) {
       const file = files[fileIndex];
       nextFile += 1;
       updateUploadStatus(completedFiles, files.length, file.name);
-      assets[fileIndex] = await uploadCloudinaryFile(file);
+      assets[fileIndex] = await uploadMediaFile(file);
       completedFiles += 1;
       updateUploadStatus(completedFiles, files.length);
     }
@@ -73,7 +73,7 @@ async function uploadToCloudinary(files) {
 function rememberUpload(assets) {
   const record = {
     submittedAt: new Date().toISOString(),
-    day: form.elements.day.value || 'unlabeled',
+    day: 'unlabeled',
     uploader: form.elements.uploader.value,
     notes: form.elements.notes.value,
     assets,
@@ -82,10 +82,10 @@ function rememberUpload(assets) {
   window.localStorage.setItem(lastUploadStorageKey, JSON.stringify(record));
 }
 
-async function uploadCloudinaryFile(file) {
+async function uploadMediaFile(file) {
   const formData = new FormData();
   formData.set('file', file, file.name);
-  formData.set('upload_preset', cloudinaryUploadPreset);
+  formData.set('upload_preset', mediaUploadPreset);
   formData.set('tags', 'fanime-2026');
 
   const context = buildContext(file);
@@ -94,7 +94,7 @@ async function uploadCloudinaryFile(file) {
     formData.set('context', context);
   }
 
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/auto/upload`, {
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${mediaCloudName}/auto/upload`, {
     method: 'POST',
     body: formData,
   });
@@ -102,55 +102,55 @@ async function uploadCloudinaryFile(file) {
 
   if (!response.ok) {
     if (context || formData.has('tags')) {
-      return uploadCloudinaryFileMinimal(file);
+      return uploadMediaFileMinimal(file);
     }
 
-    throw new Error(data?.error?.message || `Cloudinary upload failed for ${file.name}`);
+    throw new Error(data?.error?.message || `Upload failed for ${file.name}`);
   }
 
-  if (!isValidCloudinaryResponse(data)) {
-    throw new Error(`Cloudinary returned an invalid upload response for ${file.name}`);
+  if (!isValidMediaResponse(data)) {
+    throw new Error(`Upload returned an invalid response for ${file.name}`);
   }
 
-  return cloudinaryAsset(file, data);
+  return mediaAsset(file, data);
 }
 
-async function uploadCloudinaryFileMinimal(file) {
+async function uploadMediaFileMinimal(file) {
   const formData = new FormData();
   formData.set('file', file, file.name);
-  formData.set('upload_preset', cloudinaryUploadPreset);
+  formData.set('upload_preset', mediaUploadPreset);
 
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/auto/upload`, {
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${mediaCloudName}/auto/upload`, {
     method: 'POST',
     body: formData,
   });
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(data?.error?.message || `Cloudinary upload failed for ${file.name}`);
+    throw new Error(data?.error?.message || `Upload failed for ${file.name}`);
   }
 
-  if (!isValidCloudinaryResponse(data)) {
-    throw new Error(`Cloudinary returned an invalid upload response for ${file.name}`);
+  if (!isValidMediaResponse(data)) {
+    throw new Error(`Upload returned an invalid response for ${file.name}`);
   }
 
-  return cloudinaryAsset(file, data);
+  return mediaAsset(file, data);
 }
 
-function cloudinaryAsset(file, data) {
-  const cloudinaryType = data.format ? `${data.resource_type}/${data.format}` : '';
+function mediaAsset(file, data) {
+  const hostedType = data.format ? `${data.resource_type}/${data.format}` : '';
 
   return {
     url: data.secure_url,
     publicId: data.public_id,
     name: file.name,
     size: data.bytes || file.size,
-    type: file.type || cloudinaryType,
+    type: file.type || hostedType,
     resourceType: data.resource_type,
   };
 }
 
-function isValidCloudinaryResponse(data) {
+function isValidMediaResponse(data) {
   return (
     data &&
     /^(image|video)$/.test(data.resource_type) &&
@@ -161,18 +161,18 @@ function isValidCloudinaryResponse(data) {
 function buildContext(file) {
   const parts = [
     ['original_filename', file.name],
-    ['day', form.elements.day.value],
+    ['day', 'unlabeled'],
     ['uploader', form.elements.uploader.value],
     ['notes', form.elements.notes.value],
   ];
 
   return parts
     .filter(([, value]) => value.trim())
-    .map(([key, value]) => `${key}=${escapeCloudinaryContext(value)}`)
+    .map(([key, value]) => `${key}=${escapeMediaContext(value)}`)
     .join('|');
 }
 
-function escapeCloudinaryContext(value) {
+function escapeMediaContext(value) {
   return value.replace(/[=|\\]/g, (char) => `\\${char}`);
 }
 

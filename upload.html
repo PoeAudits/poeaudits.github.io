@@ -10,7 +10,7 @@
     <title>Fanime Photo Upload</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body data-theme="manga-chapter" class="upload-only-page">
+  <body class="upload-only-page">
     <header class="site-nav intake-nav">
       <span class="brand">Fanime Photo Drop</span>
     </header>
@@ -21,7 +21,7 @@
         <h1 id="page-title">Upload your photos and videos.</h1>
         <p class="intro">
           Add anything from the weekend here. Day, name, and notes are optional.
-          Uploads go straight to Cloudinary, then the gallery is synced later.
+          Uploads are saved for the gallery to be synced later.
         </p>
       </section>
 
@@ -41,19 +41,7 @@
               multiple
               required
             />
-            <small id="file-help">Pick one or more files. Photos and videos upload directly to Cloudinary.</small>
-          </label>
-
-          <label class="field">
-            <span>Day <em>optional</em></span>
-            <select name="day">
-              <option value="">Unlabeled / not sure</option>
-              <option value="day-0">Day 0</option>
-              <option value="day-1">Day 1</option>
-              <option value="day-2">Day 2</option>
-              <option value="day-3">Day 3</option>
-              <option value="day-4">Day 4</option>
-            </select>
+            <small id="file-help">Pick one or more files. Photos and videos upload directly.</small>
           </label>
 
           <label class="field">
